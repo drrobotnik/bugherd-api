@@ -154,13 +154,18 @@ class BugHerd_Api {
 		$url = self::URL . "/" . self::VERSION . "/projects/".$project_id."/tasks.json";
 		$method = "POST";
 
-		$args["task"] = $args;
+		$tasks["task"] = $args;
 
-		return $this->_sendRequest($url, $method, $args);
+		return $this->_sendRequest($url, $method, $tasks);
 	}
 
-	public function update_projects_tasks( $project_id, $id ){
-		return true;
+	public function update_projects_tasks( $project_id, $id, $args = array() ){
+		$url = self::URL . "/" . self::VERSION . "/projects/".$project_id."/tasks/".$id.".json";
+		$method = "PUT";
+
+		$tasks["task"] = $args;
+
+		return $this->_sendRequest($url, $method, $tasks);
 	}
 
 	public function get_projects_tasks_comments( $project_id, $task_id ){
@@ -169,8 +174,19 @@ class BugHerd_Api {
 		return $this->_sendRequest($url, $method);
 	}
 
-	public function post_projects_tasks_comments( $project_id, $task_id ){
-		return true;
+	/**
+	 * {"comment":{
+	 * "text":"comment here",
+	 * "user_id":123
+	 * }}
+	 */
+	public function post_projects_tasks_comments( $project_id, $task_id, $args = array() ){
+		$url = self::URL . "/" . self::VERSION . "/projects/".(int)$project_id."/tasks/".(int)$task_id."/comments.json";
+		$method = "POST";
+
+		$comment["comment"] = $args;
+
+		return $this->_sendRequest($url, $method, $comment);
 	}
 
 	public function get_webhooks(){
@@ -179,6 +195,7 @@ class BugHerd_Api {
 		return $this->_sendRequest($url, $method);
 	}
 
+/*	TODO
 	public function post_webhooks(){
 		return true;
 	}
@@ -186,7 +203,7 @@ class BugHerd_Api {
 	public function delete_webhooks( $id ){
 		return true;
 	}
-
+*/
 	/**
 	* Sends the API request and returns the response
 	*
@@ -200,7 +217,7 @@ class BugHerd_Api {
 			throw new Exception("cURL extension is missing.");
 			// @codeCoverageIgnoreEnd
 		}
-
+		#echo(json_encode($args));die;
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -230,8 +247,7 @@ class BugHerd_Api {
 		$response = curl_exec($ch);
 		
 		$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		#var_dump($response);
-		#var_dump($status);
+
 		if ($response === false) {
 			// No response received
 			$error = curl_error($ch);
