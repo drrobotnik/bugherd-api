@@ -142,13 +142,13 @@ class BugHerd_Api {
 	/**
 	 * Sets a task
 	 * @param array $args
-	 * 					@param string description, 
-	 * 					@param string priority: not set|critical|important|normal|minor, 
-	 * 					@param string status: backlog|todo|doing|done|closed,
-	 *					@param int requester_id,
-	 *					@param array tag_names, 
-	 *					@param int assigned_to_id,
-	 *					@param string external_id
+	 * @param string description, 
+	 * @param string priority: not set|critical|important|normal|minor, 
+	 * @param string status: backlog|todo|doing|done|closed,
+	 * @param int requester_id,
+	 * @param array tag_names, 
+	 * @param int assigned_to_id,
+	 * @param string external_id
 	 */
 	public function post_projects_tasks( $project_id, $args = array() ){
 		$url = self::URL . "/" . self::VERSION . "/projects/".$project_id."/tasks.json";
